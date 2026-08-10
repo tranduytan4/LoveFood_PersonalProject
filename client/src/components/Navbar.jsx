@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../store/cartContext";
+import { AuthContext } from "../store/authContext";
 
 const navLinks = [
   { label: "Menu", path: "/menu" },
   { label: "Deals", path: "/deals" },
   { label: "My Orders", path: "/orders" },
-  // { label: "Account", path: "/account" },
 ];
 
 const Navbar = () => {
@@ -16,6 +16,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { items } = useContext(CartContext);
+  const { user, isAuthenticated, logout } = useContext(AuthContext);
+
   const cartCount = items?.reduce((acc, item) => acc + (item.qty || 1), 0) || 0;
 
   const handleSearchSubmit = (e) => {
@@ -24,6 +26,13 @@ const Navbar = () => {
       navigate(`/menu?search=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm("");
     }
+  };
+
+  const handleLogout = () => {
+    setUserMenuOpen(false);
+    setOpen(false);
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -70,7 +79,7 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Mobile Search Icon (visible only on mobile) */}
+          {/* Mobile Search Icon */}
           <button className="md:hidden text-gray-600 text-xl">
             <i className="fas fa-search" />
           </button>
@@ -88,50 +97,62 @@ const Navbar = () => {
             )}
           </Link>
 
-          {/* User Avatar with Dropdown */}
-          <div className="relative relative-group hidden md:block">
-            <button
-              onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden border border-gray-300 hover:ring-2 hover:ring-[#ff3838] transition-all focus:outline-none"
-            >
-              <img
-                src="https://ui-avatars.com/api/?name=Tủn&background=random"
-                alt="Tủn"
-                className="w-full h-full object-cover"
-              />
-            </button>
+          {/* User Section (Desktop) */}
+          {isAuthenticated ? (
+            <div className="relative hidden md:block">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden border border-gray-300 hover:ring-2 hover:ring-[#ff3838] transition-all focus:outline-none"
+              >
+                <img
+                  src={user?.avatar || "https://ui-avatars.com/api/?name=User&background=ff3838&color=fff"}
+                  alt={user?.name || "User"}
+                  className="w-full h-full object-cover"
+                />
+              </button>
 
-            {/* Dropdown Menu */}
-            {userMenuOpen && (
-              <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-semibold text-gray-800">
-                    Hello, Tủn!
-                  </p>
+              {/* Dropdown Menu */}
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-sm font-semibold text-gray-800">
+                      Hello, {user?.name || "User"}!
+                    </p>
+                    <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                  </div>
+                  <Link
+                    to="/profile"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-[#ff3838]"
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-[#ff3838]"
+                  >
+                    Settings
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2" />
+                    Logout
+                  </button>
                 </div>
-                <Link
-                  to="/profile"
-                  onClick={() => setUserMenuOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-[#ff3838]"
-                >
-                  My Profile
-                </Link>
-                <Link
-                  to="/settings"
-                  onClick={() => setUserMenuOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-[#ff3838]"
-                >
-                  Settings
-                </Link>
-                <button
-                  onClick={() => setUserMenuOpen(false)}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-[#ff3838]"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="hidden md:inline-flex items-center gap-2 bg-[#ff3838] hover:bg-[#e02d2d] text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-md shadow-red-200 transition-all hover:shadow-lg active:scale-95"
+            >
+              <i className="fas fa-user text-xs" />
+              <span>Sign In</span>
+            </Link>
+          )}
 
           {/* Mobile Menu Button */}
           <button
@@ -156,15 +177,36 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
-            <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-              <img
-                src="https://ui-avatars.com/api/?name=Tủn&background=random"
-                alt="Tủn"
-              />
+          {isAuthenticated ? (
+            <div className="pt-2 border-t border-gray-100 flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src={user?.avatar || "https://ui-avatars.com/api/?name=User&background=ff3838&color=fff"}
+                  alt={user?.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-bold text-sm text-gray-800">{user?.name}</p>
+                  <p className="text-xs text-gray-500">{user?.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left py-2.5 px-4 bg-red-50 text-[#ff3838] rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+              >
+                <i className="fas fa-sign-out-alt" />
+                <span>Logout</span>
+              </button>
             </div>
-            {/* <span className="font-semibold text-gray-700">My Account</span> */}
-          </div>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="w-full bg-[#ff3838] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md"
+            >
+              Sign In / Register
+            </Link>
+          )}
         </div>
       )}
     </header>

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import ScrollToTop from "../components/ScrollToTop";
 import HomePage from "../pages/HomePage";
@@ -8,13 +8,17 @@ import MyOrders from "../pages/MyOrders";
 import ShoppingCart from "../pages/ShoppingCart";
 import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
+import LoginPage from "../pages/LoginPage";
 
 const AppRoutes = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
+
   return (
     <>
       <ScrollToTop />
-      <Navbar />
-      <div className="pt-20"> {/* Offset for fixed Navbar */}
+      {!isLoginPage && <Navbar />}
+      <div className={isLoginPage ? "" : "pt-20"}> {/* Offset for fixed Navbar */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/menu" element={<MenuPage />} />
@@ -23,6 +27,7 @@ const AppRoutes = () => {
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
     </>
