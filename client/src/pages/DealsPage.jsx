@@ -1,225 +1,156 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { productApi } from "../api/product.api";
 import { CartContext } from "../store/cartContext";
-import Footer from "../components/home/Footer";
-
-const combos = [
-  {
-    slug: "combo-1-burger-meal",
-    name: "Classic Burger Combo",
-    description: "1 Classic Burger + 1 Fries + 1 Cola",
-    originalPrice: 11.99,
-    price: 8.99,
-    rating: 4.8,
-    img: "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1",
-  },
-  {
-    slug: "combo-2-pizza-party",
-    name: "Pizza Party Combo",
-    description: "2 Large Pizzas + 1 Garlic Bread + 2 Drinks",
-    originalPrice: 32.99,
-    price: 24.99,
-    rating: 4.9,
-    img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=600&h=400",
-  },
-  {
-    slug: "combo-3-snack-time",
-    name: "Snack Time Special",
-    description: "Chicken Nuggets + Onion Rings + Lemonade",
-    originalPrice: 14.99,
-    price: 10.49,
-    rating: 4.6,
-    img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600&h=400",
-  },
-  {
-    slug: "combo-4-date-night",
-    name: "Dinner for Two",
-    description: "2 Premium Steaks + Salad + 2 Wine Glasses",
-    originalPrice: 45.99,
-    price: 38.99,
-    rating: 4.9,
-    img: "https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1",
-  },
-  {
-    slug: "combo-5-family-feast",
-    name: "Weekend Family Feast",
-    description: "1 Bucket Fried Chicken + 3 Sides + 4 Drinks",
-    originalPrice: 42.00,
-    price: 34.50,
-    rating: 4.7,
-    img: "https://images.pexels.com/photos/60616/fried-chicken-chicken-fried-crunchy-60616.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1",
-  },
-  {
-    slug: "combo-6-healthy",
-    name: "Healthy Balance",
-    description: "Avocado Toast + Greek Salad + Fresh Smoothie",
-    originalPrice: 20.50,
-    price: 16.99,
-    rating: 4.5,
-    img: "https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1",
-  },
-  {
-    slug: "combo-7-student",
-    name: "Student Saver Meal",
-    description: "1 Cheeseburger + Med Fries + Soda",
-    originalPrice: 10.50,
-    price: 7.99,
-    rating: 4.7,
-    img: "https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1",
-  },
-  {
-    slug: "combo-8-vegan",
-    name: "Vegan Power Combo",
-    description: "Plant Burger + Sweet Potato Fries + Detox Juice",
-    originalPrice: 16.99,
-    price: 13.99,
-    rating: 4.8,
-    img: "https://images.pexels.com/photos/1639556/pexels-photo-1639556.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1",
-  },
-  {
-    slug: "combo-9-dessert",
-    name: "Sweet Tooth Box",
-    description: "2 Slices Cake + 2 Ice Creams + 2 Coffees",
-    originalPrice: 25.00,
-    price: 19.99,
-    rating: 4.9,
-    img: "https://images.unsplash.com/photo-1558326567-98ae2405596b?auto=format&fit=crop&q=80&w=600&h=400",
-  },
-];
+import { formatCurrency } from "../utils/formatCurrency";
+import FoodCustomizationModal from "../components/food/FoodCustomizationModal";
+import Toast from "../components/ui/Toast";
 
 const DealsPage = () => {
+  const [deals, setDeals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [toastMsg, setToastMsg] = useState("");
+
   const { addItem } = useContext(CartContext);
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 6;
 
-  const totalPages = Math.ceil(combos.length / ITEMS_PER_PAGE);
-  const currentCombos = combos.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  useEffect(() => {
+    productApi
+      .getDeals()
+      .then((res) => {
+        setDeals(res.data?.data || []);
+      })
+      .catch((err) => console.error("Error loading deals:", err))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((p) => p + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((p) => p - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+  const handleAddToCart = (product, options) => {
+    addItem(product, options);
+    setToastMsg(`Added combo "${product.name}" to cart!`);
+    setTimeout(() => setToastMsg(""), 3000);
   };
 
   return (
-    <>
-      <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8 font-sans">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#ffe8cc] text-[#ff7b00] px-4 py-2 rounded-full font-bold text-sm mb-4 animate-bounce-slow">
-            <i className="fas fa-tag"></i> Hot Offers!
+    <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Banner */}
+        <div className="bg-gradient-to-r from-[#ff3838] via-orange-500 to-[#ff7b00] rounded-3xl p-8 md:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-3 max-w-xl text-center md:text-left">
+            <span className="bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest">
+              ⚡ Super Savings Combos
+            </span>
+            <h1 className="text-3xl md:text-5xl font-black leading-tight">
+              Exclusive Deals & Party Combos
+            </h1>
+            <p className="text-red-50 text-xs md:text-sm leading-relaxed">
+              Order delicious meal bundles with friends and family to save up to 30% on every single order.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#0d1b2a] mb-4">
-            Exclusive <span className="text-[#ff3838]">Deals & Combos</span>
-          </h1>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-            Grab our delicious combos at unbeatable prices. Treat yourself and
-            your friends without breaking the bank!
-          </p>
+          <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center text-6xl shadow-inner animate-bounce-slow shrink-0">
+            🎁
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {currentCombos.map((combo) => {
-            const savings = (combo.originalPrice - combo.price).toFixed(2);
-            return (
-              <div
-                key={combo.slug}
-                className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col relative group"
-              >
-                {/* Savings Badge */}
-                <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-[#ff7b00] to-[#ff3838] text-white font-bold px-3 py-1 rounded-full shadow-md text-sm">
-                  Save ${savings}
+        {/* Combos Grid */}
+        <div>
+          <h2 className="text-xl font-black text-[#0d1b2a] mb-6 flex items-center gap-2">
+            <i className="fas fa-fire text-[#ff3838]"></i>
+            <span>Featured Combos on Sale Today</span>
+          </h2>
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 animate-pulse space-y-4">
+                  <div className="w-full h-48 bg-gray-200 rounded-2xl"></div>
+                  <div className="h-5 bg-gray-200 rounded w-2/3"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
                 </div>
+              ))}
+            </div>
+          ) : deals.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+              <i className="fas fa-gift text-5xl text-gray-300 mb-3"></i>
+              <h3 className="text-lg font-bold text-gray-700">No active combo deals right now</h3>
+              <p className="text-xs text-gray-400 mt-1">Please check back again soon!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {deals.map((item) => {
+                const discountAmount =
+                  item.originalPrice && Number(item.originalPrice) > Number(item.price)
+                    ? Number(item.originalPrice) - Number(item.price)
+                    : 0;
 
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={combo.img}
-                    alt={combo.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
-                </div>
-
-                <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    {combo.name}
-                  </h3>
-                  <p className="text-gray-500 mb-4 flex-grow">
-                    {combo.description}
-                  </p>
-
-                  <div className="flex items-end justify-between mt-auto">
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col justify-between group"
+                  >
                     <div>
-                      <span className="text-gray-400 line-through text-sm font-semibold block mb-1">
-                        ${combo.originalPrice.toFixed(2)}
-                      </span>
-                      <span className="text-3xl font-black text-[#ff3838]">
-                        ${combo.price.toFixed(2)}
-                      </span>
+                      {/* Image container */}
+                      <div className="relative h-48 rounded-2xl overflow-hidden mb-4 bg-gray-100">
+                        <img
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {discountAmount > 0 && (
+                          <div className="absolute top-3 left-3 bg-[#ff3838] text-white text-xs font-black px-2.5 py-1 rounded-full shadow-md">
+                            SAVE {formatCurrency(discountAmount)}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Info */}
+                      <h3 className="font-extrabold text-base text-gray-900 group-hover:text-[#ff3838] transition-colors">
+                        {item.name}
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                        {item.description}
+                      </p>
                     </div>
 
-                    <button
-                      onClick={() =>
-                        addItem({
-                          ...combo,
-                          category: "Combo",
-                        })
-                      }
-                      className="px-6 py-3 bg-[#ff3838] text-white font-bold rounded-full hover:bg-[#e62e2e] hover:shadow-lg hover:-translate-y-1 transition-all active:scale-95 flex items-center gap-2"
-                    >
-                      <i className="fas fa-cart-plus"></i> Grab Deal
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                    {/* Price & Action */}
+                    <div className="pt-4 mt-4 border-t border-gray-50 flex items-center justify-between">
+                      <div>
+                        <span className="text-lg font-black text-[#ff3838] block">
+                          {formatCurrency(item.price)}
+                        </span>
+                        {item.originalPrice && (
+                          <span className="text-xs text-gray-400 line-through">
+                            {formatCurrency(item.originalPrice)}
+                          </span>
+                        )}
+                      </div>
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-4 mt-12">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className={`min-w-[120px] px-6 py-3 rounded-full font-bold transition-all duration-300 ${
-                currentPage === 1
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-[#ff3838] text-white hover:bg-[#e62e2e] shadow-lg shadow-red-200"
-              }`}
-            >
-              <i className="fas fa-arrow-left mr-2"></i> Prev
-            </button>
-            <div className="text-gray-600 font-semibold px-4">
-              Page <span className="text-[#ff3838]">{currentPage}</span> of {totalPages}
+                      <button
+                        onClick={() => setSelectedProduct(item)}
+                        className="px-5 py-2.5 bg-[#ff3838] hover:bg-[#e02d2d] text-white font-extrabold text-xs rounded-xl shadow-md shadow-red-200 transition-all active:scale-95 flex items-center gap-2"
+                      >
+                        <span>Grab Deal</span>
+                        <i className="fas fa-arrow-right text-[10px]"></i>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`min-w-[120px] px-6 py-3 rounded-full font-bold transition-all duration-300 ${
-                currentPage === totalPages
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-[#ff3838] text-white hover:bg-[#e62e2e] shadow-lg shadow-red-200"
-              }`}
-            >
-              Next <i className="fas fa-arrow-right ml-2"></i>
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
+
+      {/* Food Customization Modal */}
+      <FoodCustomizationModal
+        product={selectedProduct}
+        isOpen={Boolean(selectedProduct)}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
+      />
+
+      {/* Toast */}
+      <Toast message={toastMsg} onClose={() => setToastMsg("")} />
     </div>
-    <Footer />
-    </>
   );
 };
 

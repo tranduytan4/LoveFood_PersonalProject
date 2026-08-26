@@ -7,6 +7,8 @@ const env = {
   pgUser: process.env.PGUSER || "postgres",
   pgPassword: process.env.PGPASSWORD || "",
   pgDatabase: process.env.PGDATABASE || "smart_food_order",
+  jwtSecret: process.env.JWT_SECRET || "super_secure_food_secret_key_2026",
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
 };
 
 module.exports = { env };

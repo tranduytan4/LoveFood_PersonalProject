@@ -9,7 +9,7 @@ const Hero = () => {
     >
       <div className="flex-[1_1_400px] flex flex-col items-start text-left">
         {/* Badge */}
-        <div className="bg-[#ffe8cc] text-[#ff7b00] px-[20px] py-[10px] rounded-full font-bold text-[16px] mb-[10px]  inline-flex items-center gap-2 animate-bounce-slow">
+        <div className="bg-[#ffe8cc] text-[#ff7b00] px-[20px] py-[10px] rounded-full font-bold text-[16px] mb-[10px] inline-flex items-center gap-2 animate-bounce-slow">
           Best in Town 🍔
         </div>
 

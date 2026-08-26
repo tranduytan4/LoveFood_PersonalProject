@@ -14,22 +14,16 @@ const initDb = async () => {
     const client = await pool.connect();
     console.log("✅ PostgreSQL connected successfully");
 
-    // Drop legacy table structures if upgrading schema
-    await client.query(`
-      DROP TABLE IF EXISTS system_audit_logs, reviews, order_status_history, order_items, orders, 
-                     vouchers, product_toppings, products, categories, user_addresses, users, roles CASCADE;
-    `);
-
     await client.query(`
       -- 1. Roles Table
-      CREATE TABLE roles (
+      CREATE TABLE IF NOT EXISTS roles (
         id SERIAL PRIMARY KEY,
         name VARCHAR(50) UNIQUE NOT NULL,
         description TEXT DEFAULT ''
       );
 
       -- 2. Users Table
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         role_id INTEGER NOT NULL REFERENCES roles(id) ON DELETE RESTRICT,
         name VARCHAR(255) NOT NULL,
@@ -43,7 +37,7 @@ const initDb = async () => {
       );
 
       -- 3. User Addresses Table
-      CREATE TABLE user_addresses (
+      CREATE TABLE IF NOT EXISTS user_addresses (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         recipient_name VARCHAR(255) NOT NULL,
@@ -57,7 +51,7 @@ const initDb = async () => {
       );
 
       -- 4. Categories Table
-      CREATE TABLE categories (
+      CREATE TABLE IF NOT EXISTS categories (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
@@ -69,7 +63,7 @@ const initDb = async () => {
       );
 
       -- 5. Products Table
-      CREATE TABLE products (
+      CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
         category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
         name VARCHAR(255) NOT NULL,
@@ -88,7 +82,7 @@ const initDb = async () => {
       );
 
       -- 6. Product Toppings / Options Table
-      CREATE TABLE product_toppings (
+      CREATE TABLE IF NOT EXISTS product_toppings (
         id SERIAL PRIMARY KEY,
         product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
         name VARCHAR(255) NOT NULL,
@@ -97,7 +91,7 @@ const initDb = async () => {
       );
 
       -- 7. Vouchers / Promotions Table
-      CREATE TABLE vouchers (
+      CREATE TABLE IF NOT EXISTS vouchers (
         id SERIAL PRIMARY KEY,
         code VARCHAR(50) UNIQUE NOT NULL,
         description TEXT DEFAULT '',
@@ -114,7 +108,7 @@ const initDb = async () => {
       );
 
       -- 8. Orders Table
-      CREATE TABLE orders (
+      CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
         order_code VARCHAR(50) UNIQUE NOT NULL,
         user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
@@ -136,7 +130,7 @@ const initDb = async () => {
       );
 
       -- 9. Order Items Table
-      CREATE TABLE order_items (
+      CREATE TABLE IF NOT EXISTS order_items (
         id SERIAL PRIMARY KEY,
         order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
         product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
@@ -148,7 +142,7 @@ const initDb = async () => {
       );
 
       -- 10. Order Status History Table
-      CREATE TABLE order_status_history (
+      CREATE TABLE IF NOT EXISTS order_status_history (
         id SERIAL PRIMARY KEY,
         order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
         status VARCHAR(50) NOT NULL,
@@ -158,7 +152,7 @@ const initDb = async () => {
       );
 
       -- 11. Product Reviews Table
-      CREATE TABLE reviews (
+      CREATE TABLE IF NOT EXISTS reviews (
         id SERIAL PRIMARY KEY,
         order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
         product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
@@ -169,7 +163,7 @@ const initDb = async () => {
       );
 
       -- 12. System Audit Logs Table (Admin Tracking)
-      CREATE TABLE system_audit_logs (
+      CREATE TABLE IF NOT EXISTS system_audit_logs (
         id SERIAL PRIMARY KEY,
         admin_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
         action VARCHAR(100) NOT NULL,
@@ -180,15 +174,15 @@ const initDb = async () => {
       );
 
       -- Indexes for performance optimization
-      CREATE INDEX idx_users_email ON users(email);
-      CREATE INDEX idx_users_role ON users(role_id);
-      CREATE INDEX idx_products_category ON products(category_id);
-      CREATE INDEX idx_products_slug ON products(slug);
-      CREATE INDEX idx_categories_slug ON categories(slug);
-      CREATE INDEX idx_orders_user ON orders(user_id);
-      CREATE INDEX idx_orders_status ON orders(order_status);
-      CREATE INDEX idx_order_items_order ON order_items(order_id);
-      CREATE INDEX idx_reviews_product ON reviews(product_id);
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+      CREATE INDEX IF NOT EXISTS idx_users_role ON users(role_id);
+      CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
+      CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
+      CREATE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug);
+      CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
+      CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(order_status);
+      CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+      CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews(product_id);
     `);
 
     client.release();

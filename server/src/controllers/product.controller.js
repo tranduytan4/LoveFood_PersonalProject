@@ -12,6 +12,26 @@ const getProducts = async (req, res, next) => {
   }
 };
 
+const getPopularProducts = async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit, 10) || 9;
+    const products = await Product.findPopular(limit);
+    res.json({ data: products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getDealProducts = async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit, 10) || 12;
+    const products = await Product.findDeals(limit);
+    res.json({ data: products });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getProductBySlug = async (req, res, next) => {
   try {
     const { slug } = req.params;
@@ -26,5 +46,4 @@ const getProductBySlug = async (req, res, next) => {
   }
 };
 
-module.exports = { getProducts, getProductBySlug };
-
+module.exports = { getProducts, getPopularProducts, getDealProducts, getProductBySlug };

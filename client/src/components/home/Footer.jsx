@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Logo from "../ui/Logo";
 
 const Footer = () => {
   return (
@@ -7,14 +8,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 border-b border-[#ff8080]/30 pb-10 mb-0 px-4 md:px-[9%]">
         {/* Brand & Social Section */}
         <div className="flex flex-col items-center justify-center h-full gap-4 lg:pr-8">
-          <Link
-            to="/"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2 text-[40px] font-black text-white hover:scale-105 transition-transform origin-left"
-          >
-            <i className="fas fa-utensils text-[36px]" />
-            <span className="tracking-tight">LoveFood</span>
-          </Link>
+          <Logo variant="light" size="lg" />
           <div className="flex items-center gap-3 mt-4">
             <a
               href="https://www.facebook.com/DuyTan2107"
