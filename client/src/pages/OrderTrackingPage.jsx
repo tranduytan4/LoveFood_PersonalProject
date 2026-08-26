@@ -87,10 +87,10 @@ const OrderTrackingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center font-sans">
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center font-sans">
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 border-4 border-red-200 border-t-[#ff3838] rounded-full animate-spin mx-auto"></div>
-          <p className="text-gray-500 font-bold text-sm">Loading order tracking data...</p>
+          <div className="w-14 h-14 border-4 border-red-100 border-t-[#ff3838] rounded-full animate-spin mx-auto"></div>
+          <p className="text-slate-500 font-bold text-xs">Loading real-time order tracking...</p>
         </div>
       </div>
     );
@@ -98,15 +98,15 @@ const OrderTrackingPage = () => {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center py-20 px-4 font-sans text-center">
-        <div className="w-20 h-20 bg-red-100 text-[#ff3838] rounded-full flex items-center justify-center mb-4 text-3xl">
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-center items-center py-20 px-4 font-sans text-center">
+        <div className="w-20 h-20 bg-red-50 text-[#ff3838] rounded-3xl flex items-center justify-center mb-4 text-3xl border border-red-100 shadow-sm">
           <i className="fas fa-exclamation-triangle"></i>
         </div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Order Not Found</h2>
-        <p className="text-gray-500 text-sm mb-6 max-w-md">{error}</p>
+        <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">Order Not Found</h2>
+        <p className="text-slate-500 text-xs mb-6 max-w-md font-medium">{error}</p>
         <Link
           to="/"
-          className="px-6 py-2.5 bg-[#ff3838] text-white font-bold rounded-full hover:bg-[#e02d2d] transition text-sm"
+          className="px-6 py-2.5 bg-[#ff3838] hover:bg-[#e02d2d] text-white font-black rounded-2xl transition text-xs shadow-md shadow-red-200"
         >
           Return Home
         </Link>
@@ -119,7 +119,7 @@ const OrderTrackingPage = () => {
   const isCancelled = order.orderStatus === "cancelled";
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] py-10 px-4 md:px-8 font-sans selection:bg-red-500 selection:text-white">
       {toast && (
         <Toast
           message={toast.message}
@@ -131,13 +131,13 @@ const OrderTrackingPage = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         
         {/* Top Header Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black uppercase tracking-widest text-[#ff3838] bg-red-50 px-3 py-1 rounded-full">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#ff3838] bg-red-50 border border-red-100 px-3 py-1 rounded-full">
                 Live Order Tracking
               </span>
-              <span className="text-xs text-gray-400 font-mono">
+              <span className="text-xs text-slate-400 font-mono">
                 {new Date(order.createdAt).toLocaleString("en-US", {
                   hour: "2-digit",
                   minute: "2-digit",
@@ -147,7 +147,7 @@ const OrderTrackingPage = () => {
                 })}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#0d1b2a] mt-2 font-mono">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1.5 font-mono tracking-tight">
               #{order.orderCode}
             </h1>
           </div>
@@ -155,23 +155,25 @@ const OrderTrackingPage = () => {
           <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
             <button
               onClick={fetchOrder}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs flex items-center gap-1.5 transition"
+              className="px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold rounded-2xl text-xs flex items-center gap-1.5 transition border border-slate-200/70"
             >
-              <i className="fas fa-sync-alt text-[10px]"></i> Refresh
+              <i className="fas fa-sync-alt text-[10px]"></i>
+              <span>Refresh</span>
             </button>
             <button
               onClick={handleReorder}
-              className="px-5 py-2 bg-[#ff3838] hover:bg-[#e02d2d] text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-red-200 active:scale-95"
+              className="px-5 py-2.5 bg-[#ff3838] hover:bg-[#e02d2d] text-white font-black rounded-2xl text-xs flex items-center gap-1.5 transition shadow-md shadow-red-200 active:scale-95"
             >
-              <i className="fas fa-redo text-[10px]"></i> Re-order This
+              <i className="fas fa-redo text-[10px]"></i>
+              <span>Re-order This</span>
             </button>
           </div>
         </div>
 
         {/* 3D Smooth Real-time Status Timeline Stepper */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80">
           {isCancelled ? (
-            <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center text-red-600">
+            <div className="bg-red-50 border border-red-200 rounded-3xl p-6 text-center text-red-600">
               <i className="fas fa-times-circle text-4xl mb-2"></i>
               <h3 className="text-lg font-bold">Order Cancelled</h3>
               <p className="text-xs text-red-500 mt-1">
@@ -180,17 +182,17 @@ const OrderTrackingPage = () => {
             </div>
           ) : (
             <div>
-              <h2 className="text-base font-bold text-gray-900 mb-8 flex items-center gap-2">
+              <h2 className="text-xs font-black uppercase tracking-wider text-slate-900 mb-8 flex items-center gap-2 border-b border-slate-100 pb-3">
                 <i className="fas fa-truck-fast text-[#ff3838]"></i>
-                <span>Live Delivery Progress</span>
+                <span>Live Delivery Progress Pipeline</span>
               </h2>
 
               {/* Stepper Progress Bar Container */}
               <div>
                 {/* Desktop Stepper */}
                 <div className="hidden sm:block relative">
-                  {/* Horizontal Progress Track - perfectly centered vertically at top-[28px] */}
-                  <div className="absolute top-[28px] left-[10%] right-[10%] -translate-y-1/2 h-2.5 bg-gray-100 rounded-full shadow-inner border border-gray-200/50 z-0">
+                  {/* Horizontal Progress Track - mathematically centered at top-[28px] */}
+                  <div className="absolute top-[28px] left-[10%] right-[10%] -translate-y-1/2 h-2.5 bg-slate-100 rounded-full shadow-inner border border-slate-200/60 z-0">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-orange-400 to-[#ff3838] shadow-[0_2px_8px_rgba(255,56,56,0.35)] transition-all duration-700"
                       style={{
@@ -208,14 +210,14 @@ const OrderTrackingPage = () => {
 
                       return (
                         <div key={step.key} className="flex flex-col items-center text-center group">
-                          {/* 3D Circular Bubble (56px high, exact vertical center is 28px) */}
+                          {/* 3D Circular Bubble (56px high, center is 28px) */}
                           <div
                             className={`w-14 h-14 rounded-full flex items-center justify-center text-lg font-black transition-all duration-300 shrink-0 ${
                               isCurrent
                                 ? "bg-gradient-to-b from-[#ff5e5e] via-[#ff3838] to-[#d62828] text-white shadow-[0_10px_25px_rgba(255,56,56,0.45),inset_0_2px_4px_rgba(255,255,255,0.6)] border-2 border-white ring-8 ring-red-100/80 scale-110 animate-pulse"
                                 : isDone
                                 ? "bg-gradient-to-b from-emerald-400 to-emerald-600 text-white shadow-[0_6px_16px_rgba(16,185,129,0.35),inset_0_2px_4px_rgba(255,255,255,0.5)] border-2 border-white ring-4 ring-emerald-50"
-                                : "bg-gradient-to-b from-gray-100 to-gray-200 text-gray-400 shadow-inner border border-gray-200/60"
+                                : "bg-gradient-to-b from-slate-100 to-slate-200 text-slate-400 shadow-inner border border-slate-200/60"
                             }`}
                           >
                             <i className={`fas ${step.icon} drop-shadow`}></i>
@@ -224,17 +226,17 @@ const OrderTrackingPage = () => {
                           {/* Text labels */}
                           <div className="mt-3 space-y-0.5">
                             <p
-                              className={`text-xs font-extrabold ${
+                              className={`text-xs font-black ${
                                 isCurrent
                                   ? "text-[#ff3838]"
                                   : isPassedOrCurrent
-                                  ? "text-gray-900"
-                                  : "text-gray-400"
+                                  ? "text-slate-900"
+                                  : "text-slate-400"
                               }`}
                             >
                               {step.label}
                             </p>
-                            <p className="text-[11px] text-gray-400 line-clamp-1">
+                            <p className="text-[11px] text-slate-400 line-clamp-1 font-medium">
                               {step.desc}
                             </p>
                           </div>
@@ -259,24 +261,24 @@ const OrderTrackingPage = () => {
                               ? "bg-gradient-to-b from-[#ff5e5e] via-[#ff3838] to-[#d62828] text-white shadow-lg ring-4 ring-red-100 scale-105"
                               : isDone
                               ? "bg-gradient-to-b from-emerald-400 to-emerald-600 text-white shadow"
-                              : "bg-gray-100 text-gray-400 border border-gray-200"
+                              : "bg-slate-100 text-slate-400 border border-slate-200"
                           }`}
                         >
                           <i className={`fas ${step.icon}`}></i>
                         </div>
                         <div>
                           <p
-                            className={`text-xs font-extrabold ${
+                            className={`text-xs font-black ${
                               isCurrent
                                 ? "text-[#ff3838]"
                                 : isPassedOrCurrent
-                                ? "text-gray-900"
-                                : "text-gray-400"
+                                ? "text-slate-900"
+                                : "text-slate-400"
                             }`}
                           >
                             {step.label}
                           </p>
-                          <p className="text-[11px] text-gray-400">{step.desc}</p>
+                          <p className="text-[11px] text-slate-400 font-medium">{step.desc}</p>
                         </div>
                       </div>
                     );
@@ -291,15 +293,15 @@ const OrderTrackingPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           
           {/* Items Breakdown */}
-          <div className="md:col-span-7 bg-white rounded-3xl p-6 sm:p-7 shadow-sm border border-gray-100">
-            <h2 className="text-base font-bold text-gray-900 mb-4 border-b pb-3 flex items-center justify-between">
+          <div className="md:col-span-7 bg-white rounded-3xl p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80">
+            <h2 className="text-xs font-black uppercase tracking-wider text-slate-900 mb-4 border-b border-slate-100 pb-3 flex items-center justify-between">
               <span>Dish Breakdown</span>
-              <span className="text-xs text-gray-500 font-normal">
+              <span className="text-xs text-slate-400 font-bold">
                 {order.items?.length || 0} items
               </span>
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {order.items?.map((item, idx) => {
                 const options =
                   typeof item.options === "string"
@@ -309,10 +311,10 @@ const OrderTrackingPage = () => {
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 rounded-2xl border border-gray-100 hover:bg-gray-50/60 transition"
+                    className="flex items-center justify-between p-3.5 rounded-2xl border border-slate-100 hover:bg-slate-50/60 transition group"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden shrink-0">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-100">
                         <img
                           src={
                             item.imageUrl ||
@@ -323,22 +325,24 @@ const OrderTrackingPage = () => {
                         />
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-gray-900">{item.name}</h4>
-                        <div className="text-[11px] text-gray-500 space-x-1">
+                        <h4 className="font-black text-xs sm:text-sm text-slate-900">{item.name}</h4>
+                        <div className="text-[11px] text-slate-500 space-x-1.5 font-medium">
                           <span>
                             {formatCurrency(item.price)} x {item.quantity}
                           </span>
                           {options.size && options.size !== "Standard" && (
-                            <span className="font-bold text-blue-600">• Size: {options.size}</span>
+                            <span className="font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                              Size: {options.size}
+                            </span>
                           )}
                         </div>
                         {options.toppings?.length > 0 && (
-                          <p className="text-[10px] text-gray-400">
+                          <p className="text-[10px] text-slate-400">
                             +{options.toppings.join(", ")}
                           </p>
                         )}
                         {options.itemNote && (
-                          <p className="text-[10px] text-amber-600 italic">
+                          <p className="text-[10px] text-amber-600 italic font-medium">
                             Note: "{options.itemNote}"
                           </p>
                         )}
@@ -346,15 +350,15 @@ const OrderTrackingPage = () => {
                     </div>
 
                     <div className="text-right">
-                      <span className="font-black text-sm text-gray-900 block">
+                      <span className="font-black text-sm text-slate-900 block tabular-nums">
                         {formatCurrency(item.itemTotal || item.price * item.quantity)}
                       </span>
                       {order.orderStatus === "completed" && item.productId && (
                         <button
                           onClick={() => handleOpenReview(item)}
-                          className="text-[11px] font-bold text-[#ff3838] hover:underline mt-1 inline-block"
+                          className="text-[11px] font-black text-[#ff3838] hover:underline mt-1 inline-flex items-center gap-1"
                         >
-                          ⭐ Rate Dish
+                          <span>⭐ Rate Dish</span>
                         </button>
                       )}
                     </div>
@@ -364,24 +368,24 @@ const OrderTrackingPage = () => {
             </div>
 
             {/* Price Summary */}
-            <div className="border-t pt-4 mt-6 space-y-2.5 text-xs text-gray-600">
+            <div className="border-t border-slate-100 pt-4 mt-6 space-y-2.5 text-xs text-slate-600">
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="font-bold text-gray-900">{formatCurrency(order.subtotal)}</span>
+                <span className="font-medium">Subtotal</span>
+                <span className="font-bold text-slate-900 tabular-nums">{formatCurrency(order.subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Delivery Fee</span>
-                <span className="font-bold text-gray-900">{formatCurrency(order.shippingFee)}</span>
+                <span className="font-medium">Delivery Fee</span>
+                <span className="font-bold text-slate-900 tabular-nums">{formatCurrency(order.shippingFee)}</span>
               </div>
               {order.discountAmount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-bold">
                   <span>Promo Discount</span>
-                  <span>-{formatCurrency(order.discountAmount)}</span>
+                  <span className="tabular-nums">-{formatCurrency(order.discountAmount)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-base font-black text-gray-900 pt-2 border-t">
+              <div className="flex justify-between text-base font-black text-slate-900 pt-2 border-t border-slate-100">
                 <span>Total Payment</span>
-                <span className="text-xl font-black text-[#ff3838]">
+                <span className="text-xl font-black text-[#ff3838] tabular-nums">
                   {formatCurrency(order.totalAmount)}
                 </span>
               </div>
@@ -391,40 +395,40 @@ const OrderTrackingPage = () => {
           {/* Delivery & Payment Info */}
           <div className="md:col-span-5 space-y-6">
             
-            {/* Delivery card */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+            {/* Delivery Card */}
+            <div className="bg-white rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
                 <i className="fas fa-map-pin text-[#ff3838]"></i>
                 <span>Delivery Information</span>
               </h3>
-              <div className="space-y-2 text-xs text-gray-600">
+              <div className="space-y-2 text-xs text-slate-600 font-medium">
                 <p>
-                  <b className="text-gray-900">Recipient:</b> {order.recipientName}
+                  <b className="text-slate-900 font-bold">Recipient:</b> {order.recipientName}
                 </p>
                 <p>
-                  <b className="text-gray-900">Phone:</b> {order.recipientPhone}
+                  <b className="text-slate-900 font-bold">Phone:</b> {order.recipientPhone}
                 </p>
                 <p>
-                  <b className="text-gray-900">Address:</b> {order.shippingAddress}
+                  <b className="text-slate-900 font-bold">Address:</b> {order.shippingAddress}
                 </p>
                 {order.note && (
                   <p className="text-amber-600 italic">
-                    <b className="text-gray-900 not-italic">Instructions:</b> "{order.note}"
+                    <b className="text-slate-900 not-italic font-bold">Instructions:</b> "{order.note}"
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Payment card */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+            {/* Payment Card */}
+            <div className="bg-white rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
                 <i className="fas fa-wallet text-[#ff3838]"></i>
                 <span>Payment Details</span>
               </h3>
-              <div className="space-y-2 text-xs text-gray-600">
+              <div className="space-y-2 text-xs text-slate-600">
                 <div className="flex justify-between">
-                  <span>Method:</span>
-                  <span className="font-bold text-gray-900">
+                  <span className="font-medium">Method:</span>
+                  <span className="font-bold text-slate-900">
                     {order.paymentMethod === "COD"
                       ? "Cash on Delivery (COD)"
                       : order.paymentMethod === "MOMO"
@@ -433,9 +437,9 @@ const OrderTrackingPage = () => {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>Status:</span>
+                  <span className="font-medium">Status:</span>
                   <span
-                    className={`font-bold px-2 py-0.5 rounded text-[11px] ${
+                    className={`font-black px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider ${
                       order.paymentStatus === "paid"
                         ? "bg-emerald-100 text-emerald-700"
                         : "bg-amber-100 text-amber-700"
@@ -450,7 +454,7 @@ const OrderTrackingPage = () => {
             {/* Back button */}
             <Link
               to="/orders"
-              className="block w-full py-3 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-2xl text-xs transition"
+              className="block w-full py-3.5 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-black rounded-2xl text-xs transition active:scale-[0.98]"
             >
               <i className="fas fa-list mr-1.5"></i> View All My Orders
             </Link>
@@ -460,32 +464,34 @@ const OrderTrackingPage = () => {
 
       {/* Review Modal */}
       {reviewModalItem && (
-        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative border border-gray-100 animate-in fade-in duration-200 font-sans">
+        <div className="fixed inset-0 z-[10000] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl relative border border-slate-200/80 font-sans space-y-4 animate-in zoom-in-95 duration-200">
             <button
               onClick={() => setReviewModalItem(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-2"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs"
             >
               <i className="fas fa-times"></i>
             </button>
 
-            <h3 className="text-lg font-bold text-gray-900 mb-1">
-              Rate Your Meal ⭐
-            </h3>
-            <p className="text-xs text-gray-500 mb-4">
-              How did you like <b>{reviewModalItem.name}</b>?
-            </p>
+            <div>
+              <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                Rate Your Dish ⭐
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                How did you enjoy <b>{reviewModalItem.name}</b>?
+              </p>
+            </div>
 
             <form onSubmit={handleSubmitReview} className="space-y-4">
               {/* Star rating selector */}
-              <div className="flex justify-center gap-2 py-2">
+              <div className="flex justify-center gap-3 py-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     type="button"
                     onClick={() => setReviewRating(star)}
-                    className={`text-3xl transition ${
-                      star <= reviewRating ? "text-amber-400 scale-110" : "text-gray-200"
+                    className={`text-3xl transition-all ${
+                      star <= reviewRating ? "text-amber-400 scale-110" : "text-slate-200"
                     }`}
                   >
                     ★
@@ -494,7 +500,7 @@ const OrderTrackingPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Your Review
                 </label>
                 <textarea
@@ -502,23 +508,23 @@ const OrderTrackingPage = () => {
                   value={reviewComment}
                   onChange={(e) => setReviewComment(e.target.value)}
                   placeholder="Food was hot, delicious, delivered right on time..."
-                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-xs text-gray-800 focus:bg-white focus:border-[#ff3838] outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs text-slate-800 focus:bg-white focus:ring-4 focus:ring-red-100 focus:border-[#ff3838] outline-none transition font-medium"
                   required
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setReviewModalItem(null)}
-                  className="flex-1 py-2.5 border rounded-xl text-xs font-bold text-gray-600"
+                  className="flex-1 py-3 border border-slate-200 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-50 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={reviewSubmitting}
-                  className="flex-1 py-2.5 bg-[#ff3838] text-white rounded-xl text-xs font-bold shadow-md shadow-red-200"
+                  className="flex-1 py-3 bg-[#ff3838] hover:bg-[#e02d2d] text-white rounded-2xl text-xs font-black shadow-md shadow-red-200 transition active:scale-95"
                 >
                   {reviewSubmitting ? "Submitting..." : "Submit Review"}
                 </button>

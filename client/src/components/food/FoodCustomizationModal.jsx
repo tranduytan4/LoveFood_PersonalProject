@@ -51,52 +51,61 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col font-sans border border-gray-100 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col font-sans border border-slate-200/80 animate-in zoom-in-95 duration-200">
         
-        {/* Modal Header */}
-        <div className="relative h-48 sm:h-56 bg-gray-100 shrink-0">
+        {/* Modal Header Media */}
+        <div className="relative h-48 sm:h-56 bg-slate-100 shrink-0 overflow-hidden">
           <img
             src={product.imageUrl || product.img || "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600"}
             alt={product.name}
             className="w-full h-full object-cover"
           />
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-gray-700 flex items-center justify-center backdrop-blur-md shadow-md transition"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-800 flex items-center justify-center backdrop-blur-md shadow-md transition-all active:scale-95"
             aria-label="Close"
           >
             <i className="fas fa-times text-sm"></i>
           </button>
-          <div className="absolute bottom-3 left-4 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
-            {product.category?.name || product.category || "Special"}
+
+          <div className="absolute bottom-4 left-5 flex items-center gap-2">
+            <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+              {product.category?.name || product.category || "Signature Dish"}
+            </span>
           </div>
         </div>
 
         {/* Modal Body (Scrollable) */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1">
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 bg-white">
           {/* Dish Details */}
           <div>
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="text-xl font-extrabold text-gray-900 leading-tight">
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="text-xl font-black text-slate-900 tracking-tight leading-snug">
                 {product.name}
               </h3>
-              <span className="text-lg font-black text-[#ff3838] shrink-0">
+              <span className="text-xl font-black text-[#ff3838] shrink-0 tabular-nums">
                 {formatCurrency(basePrice)}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium">
               {product.description}
             </p>
           </div>
 
           {/* 1. Size Selection */}
-          <div className="space-y-3 border-t pt-4">
+          <div className="space-y-3 border-t border-slate-100 pt-5">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                1. Select Portion Size
-              </h4>
-              <span className="text-[11px] font-semibold text-[#ff3838] bg-red-50 px-2 py-0.5 rounded-full">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Step 1</span>
+                <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">
+                  Select Portion Size
+                </h4>
+              </div>
+              <span className="text-[10px] font-bold text-[#ff3838] bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">
                 Required
               </span>
             </div>
@@ -104,13 +113,13 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
             <div className="grid grid-cols-2 gap-3">
               <label
                 onClick={() => setSelectedSize("Standard")}
-                className={`p-3 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition ${
+                className={`p-3.5 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${
                   selectedSize === "Standard"
-                    ? "border-[#ff3838] bg-red-50/50 text-[#ff3838]"
-                    : "border-gray-100 hover:border-gray-200 text-gray-700"
+                    ? "border-[#ff3838] bg-red-50/40 text-slate-900 shadow-sm"
+                    : "border-slate-100 hover:border-slate-200 bg-slate-50/50 text-slate-600"
                 }`}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <input
                     type="radio"
                     name="size"
@@ -120,18 +129,18 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
                   />
                   <span className="text-xs font-bold">Standard</span>
                 </div>
-                <span className="text-xs font-bold">+ $0.00</span>
+                <span className="text-[11px] font-bold text-slate-500">+ $0.00</span>
               </label>
 
               <label
                 onClick={() => setSelectedSize("Large")}
-                className={`p-3 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition ${
+                className={`p-3.5 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${
                   selectedSize === "Large"
-                    ? "border-[#ff3838] bg-red-50/50 text-[#ff3838]"
-                    : "border-gray-100 hover:border-gray-200 text-gray-700"
+                    ? "border-[#ff3838] bg-red-50/40 text-slate-900 shadow-sm"
+                    : "border-slate-100 hover:border-slate-200 bg-slate-50/50 text-slate-600"
                 }`}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <input
                     type="radio"
                     name="size"
@@ -141,19 +150,22 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
                   />
                   <span className="text-xs font-bold">Large (Upsize)</span>
                 </div>
-                <span className="text-xs font-bold">+ $1.50</span>
+                <span className="text-[11px] font-black text-[#ff3838]">+ $1.50</span>
               </label>
             </div>
           </div>
 
           {/* 2. Toppings Selection */}
           {product.toppings && product.toppings.length > 0 && (
-            <div className="space-y-3 border-t pt-4">
+            <div className="space-y-3 border-t border-slate-100 pt-5">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                  2. Extra Toppings & Add-ons
-                </h4>
-                <span className="text-[11px] text-gray-400">Optional</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Step 2</span>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">
+                    Extra Toppings & Add-ons
+                  </h4>
+                </div>
+                <span className="text-[10px] font-bold text-slate-400">Optional</span>
               </div>
 
               <div className="space-y-2">
@@ -163,22 +175,22 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
                     <label
                       key={topping.id || topping.name}
                       onClick={() => handleToggleTopping(topping.name)}
-                      className={`p-3 rounded-2xl border cursor-pointer flex items-center justify-between transition ${
+                      className={`p-3.5 rounded-2xl border cursor-pointer flex items-center justify-between transition-all ${
                         isChecked
-                          ? "border-[#ff3838] bg-red-50/40 text-gray-900"
-                          : "border-gray-100 hover:bg-gray-50 text-gray-700"
+                          ? "border-[#ff3838] bg-red-50/30 text-slate-900 shadow-sm"
+                          : "border-slate-100 hover:border-slate-200 bg-slate-50/40 text-slate-700"
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => handleToggleTopping(topping.name)}
-                          className="accent-[#ff3838] rounded w-4 h-4"
+                          className="accent-[#ff3838] rounded-md w-4 h-4"
                         />
-                        <span className="text-xs font-semibold">{topping.name}</span>
+                        <span className="text-xs font-semibold text-slate-800">{topping.name}</span>
                       </div>
-                      <span className="text-xs font-bold text-[#ff3838]">
+                      <span className="text-xs font-black text-[#ff3838] tabular-nums">
                         +{formatCurrency(topping.priceAdjustment)}
                       </span>
                     </label>
@@ -189,36 +201,39 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
           )}
 
           {/* 3. Kitchen Special Note */}
-          <div className="space-y-2 border-t pt-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
-              3. Special Cooking Instructions
-            </h4>
+          <div className="space-y-2.5 border-t border-slate-100 pt-5">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Step 3</span>
+              <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">
+                Special Cooking Instructions
+              </h4>
+            </div>
             <textarea
               rows={2}
               value={itemNote}
               onChange={(e) => setItemNote(e.target.value)}
-              placeholder="e.g., Less spicy, no onions, extra ice..."
-              className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3 text-xs text-gray-800 placeholder-gray-400 focus:bg-white focus:border-[#ff3838] outline-none transition"
+              placeholder="e.g., Less spicy, no onions, sauce on the side..."
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-4 focus:ring-red-100 focus:border-[#ff3838] outline-none transition"
             />
           </div>
         </div>
 
         {/* Modal Footer (Quantity & Add Button) */}
-        <div className="p-4 sm:p-5 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-4 shrink-0">
+        <div className="p-4 sm:p-5 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-4 shrink-0">
           {/* Quantity selector */}
-          <div className="flex items-center bg-white border border-gray-200 rounded-2xl p-1 shadow-sm">
+          <div className="flex items-center bg-white border border-slate-200 rounded-2xl p-1 shadow-sm">
             <button
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="w-8 h-8 rounded-xl bg-gray-50 hover:bg-gray-200 text-gray-700 font-bold flex items-center justify-center text-sm transition"
+              className="w-8 h-8 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-black flex items-center justify-center text-sm transition active:scale-95"
             >
               -
             </button>
-            <span className="w-8 text-center font-black text-xs text-gray-900">
+            <span className="w-8 text-center font-black text-xs text-slate-900 tabular-nums">
               {quantity}
             </span>
             <button
               onClick={() => setQuantity((q) => q + 1)}
-              className="w-8 h-8 rounded-xl bg-gray-50 hover:bg-gray-200 text-gray-700 font-bold flex items-center justify-center text-sm transition"
+              className="w-8 h-8 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-black flex items-center justify-center text-sm transition active:scale-95"
             >
               +
             </button>
@@ -227,10 +242,13 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
           {/* Add to Cart Button */}
           <button
             onClick={handleAdd}
-            className="flex-1 py-3.5 px-6 bg-gradient-to-r from-[#ff7b00] to-[#ff3838] hover:from-[#ff3838] hover:to-[#e02d2d] text-white font-extrabold rounded-2xl text-xs sm:text-sm shadow-md shadow-red-200 transition-all flex items-center justify-between active:scale-95"
+            className="flex-1 py-3.5 px-6 bg-gradient-to-r from-[#ff7b00] to-[#ff3838] hover:from-[#ff3838] hover:to-[#e02d2d] text-white font-extrabold rounded-2xl text-xs sm:text-sm shadow-md shadow-red-200 transition-all flex items-center justify-between active:scale-[0.98]"
           >
-            <span>Add to Cart</span>
-            <span className="font-black text-sm">{formatCurrency(totalPrice)}</span>
+            <span className="flex items-center gap-2">
+              <i className="fas fa-cart-plus"></i>
+              <span>Add to Cart</span>
+            </span>
+            <span className="font-black text-sm tabular-nums">{formatCurrency(totalPrice)}</span>
           </button>
         </div>
       </div>

@@ -61,31 +61,33 @@ const MenuPage = () => {
   const handleAddToCart = (product, options) => {
     addItem(product, options);
     setToastMsg(`Added "${product.name}" to your cart!`);
-    setTimeout(() => setToastMsg(""), 3000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] py-10 px-4 md:px-8 font-sans selection:bg-red-500 selection:text-white">
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Header Title */}
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-[#ff3838] font-black uppercase text-xs tracking-widest bg-red-100 px-3.5 py-1.5 rounded-full inline-block">
-            Delicious & Fresh
+        {/* Header Title Section */}
+        <div className="text-center max-w-2xl mx-auto space-y-2.5">
+          <span className="text-[#ff3838] font-black uppercase text-[10px] tracking-widest bg-red-50 border border-red-100 px-3.5 py-1.5 rounded-full inline-flex items-center gap-1.5">
+            <i className="fas fa-utensils text-[9px]"></i>
+            <span>Artisan Kitchen Menu</span>
           </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0d1b2a]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
             Explore Our <span className="text-[#ff3838]">Full Menu</span>
           </h1>
-          <p className="text-gray-500 text-xs sm:text-sm">
-            Handcrafted burgers, artisan stone-baked pizzas, refreshing boba milk teas, and delicious snacks.
+          <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-medium">
+            Handcrafted double-patty burgers, artisan stone-baked pizzas, bubble milk teas, and delicious sides.
           </p>
         </div>
 
         {/* Search & Sort Controls Bar */}
-        <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between">
-          {/* Search bar */}
+        <div className="bg-white rounded-3xl p-3.5 sm:p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 flex flex-col md:flex-row gap-3.5 items-center justify-between">
+          {/* Search Bar with Icon and Shortcut Badge */}
           <div className="w-full md:w-96 relative">
-            <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none text-xs">
+              <i className="fas fa-search"></i>
+            </span>
             <input
               type="text"
               value={search}
@@ -94,17 +96,30 @@ const MenuPage = () => {
                 setSearchParams(e.target.value ? { search: e.target.value } : {});
               }}
               placeholder="Search dish name, ingredients..."
-              className="w-full bg-gray-50 hover:bg-gray-100 focus:bg-white transition rounded-2xl py-2.5 pl-11 pr-4 text-xs font-semibold text-gray-800 placeholder-gray-400 outline-none focus:ring-2 focus:ring-red-100 border border-transparent focus:border-red-200"
+              className="w-full bg-slate-50 hover:bg-slate-100/80 focus:bg-white transition rounded-2xl py-2.5 pl-9 pr-12 text-xs font-semibold text-slate-800 placeholder-slate-400 outline-none focus:ring-4 focus:ring-red-100 border border-slate-200/70 focus:border-[#ff3838]"
             />
+            {search && (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setSearchParams({});
+                }}
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 text-xs"
+              >
+                <i className="fas fa-times-circle"></i>
+              </button>
+            )}
           </div>
 
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-            <span className="text-xs font-bold text-gray-500 shrink-0">Sort By:</span>
+          <div className="flex items-center gap-2.5 w-full md:w-auto justify-end">
+            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 shrink-0">
+              Sort By:
+            </span>
             <select
               value={selectedSort}
               onChange={(e) => setSelectedSort(e.target.value)}
-              className="bg-gray-50 hover:bg-gray-100 text-gray-800 font-bold text-xs rounded-2xl py-2.5 px-4 outline-none border border-gray-200 cursor-pointer focus:ring-2 focus:ring-red-100"
+              className="bg-slate-50 hover:bg-slate-100 text-slate-800 font-bold text-xs rounded-2xl py-2.5 px-4 outline-none border border-slate-200/80 cursor-pointer focus:ring-4 focus:ring-red-100 focus:border-[#ff3838] transition"
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -119,10 +134,10 @@ const MenuPage = () => {
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`px-5 py-2.5 rounded-2xl font-black text-xs transition-all shrink-0 ${
+            className={`px-5 py-2.5 rounded-2xl font-black text-xs transition-all shrink-0 active:scale-95 ${
               selectedCategory === "all"
-                ? "bg-[#ff3838] text-white shadow-md shadow-red-200 scale-105"
-                : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                ? "bg-slate-900 text-white shadow-md shadow-slate-900/10 scale-105"
+                : "bg-white text-slate-600 hover:bg-slate-100/80 border border-slate-200/70"
             }`}
           >
             🍔 All Categories
@@ -131,10 +146,10 @@ const MenuPage = () => {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.slug)}
-              className={`px-5 py-2.5 rounded-2xl font-black text-xs transition-all shrink-0 flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-2xl font-black text-xs transition-all shrink-0 flex items-center gap-2 active:scale-95 ${
                 selectedCategory === cat.slug
                   ? "bg-[#ff3838] text-white shadow-md shadow-red-200 scale-105"
-                  : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                  : "bg-white text-slate-600 hover:bg-slate-100/80 border border-slate-200/70"
               }`}
             >
               <span>{cat.name}</span>
@@ -146,20 +161,22 @@ const MenuPage = () => {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 animate-pulse space-y-3">
-                <div className="w-full h-44 bg-gray-200 rounded-2xl"></div>
-                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                <div className="h-3 bg-gray-200 rounded w-full"></div>
-                <div className="h-8 bg-gray-200 rounded-xl"></div>
+              <div key={i} className="bg-white rounded-3xl p-4 shadow-sm border border-slate-200/60 animate-pulse space-y-3">
+                <div className="w-full h-44 bg-slate-100 rounded-2xl"></div>
+                <div className="h-4 bg-slate-100 rounded w-2/3"></div>
+                <div className="h-3 bg-slate-100 rounded w-full"></div>
+                <div className="h-9 bg-slate-100 rounded-xl"></div>
               </div>
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
-            <i className="fas fa-utensils text-5xl text-gray-300 mb-3"></i>
-            <h3 className="text-lg font-bold text-gray-700">No dishes found</h3>
-            <p className="text-xs text-gray-400 mt-1">
-              Try searching with another keyword or selecting a different category.
+          <div className="text-center py-20 bg-white rounded-3xl border border-slate-200/80 shadow-sm space-y-3">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-2xl mx-auto">
+              <i className="fas fa-utensils"></i>
+            </div>
+            <h3 className="text-base font-black text-slate-800">No dishes match your query</h3>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+              Try searching with another keyword, clearing the search box, or selecting a different category.
             </p>
           </div>
         ) : (
@@ -167,22 +184,24 @@ const MenuPage = () => {
             {products.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col justify-between group"
+                className="bg-white rounded-3xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-200/80 flex flex-col justify-between group"
               >
                 {/* Image & Badges */}
-                <div className="relative h-44 rounded-2xl overflow-hidden mb-3 bg-gray-100">
+                <div className="relative h-44 rounded-2xl overflow-hidden mb-3 bg-slate-100">
                   <img
                     src={item.imageUrl}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
+                  {/* Save Badge */}
                   {item.originalPrice && Number(item.originalPrice) > Number(item.price) && (
                     <div className="absolute top-2.5 left-2.5 bg-[#ff3838] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
                       SAVE {formatCurrency(Number(item.originalPrice) - Number(item.price))}
                     </div>
                   )}
-                  <div className="absolute bottom-2.5 right-2.5 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  {/* Rating Badge */}
+                  <div className="absolute bottom-2.5 right-2.5 bg-slate-950/70 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                     <span className="text-amber-400">★</span>
                     <span>{item.ratingAvg || "5.0"}</span>
                   </div>
@@ -191,25 +210,25 @@ const MenuPage = () => {
                 {/* Info */}
                 <div className="space-y-1.5 flex-1 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                      {item.category?.name || "Dish"}
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                      {item.category?.name || "Signature"}
                     </span>
-                    <h3 className="font-bold text-sm text-gray-900 line-clamp-1 group-hover:text-[#ff3838] transition-colors">
+                    <h3 className="font-black text-sm text-slate-900 line-clamp-1 group-hover:text-[#ff3838] transition-colors mt-0.5">
                       {item.name}
                     </h3>
-                    <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed mt-0.5">
+                    <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed mt-0.5 font-medium">
                       {item.description}
                     </p>
                   </div>
 
-                  {/* Price & Action */}
-                  <div className="pt-3 border-t border-gray-50 flex items-center justify-between">
+                  {/* Price & Add Button */}
+                  <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between">
                     <div>
-                      <span className="text-base font-black text-[#ff3838] block">
+                      <span className="text-base font-black text-[#ff3838] block tabular-nums">
                         {formatCurrency(item.price)}
                       </span>
                       {item.originalPrice && Number(item.originalPrice) > Number(item.price) && (
-                        <span className="text-[10px] text-gray-400 line-through">
+                        <span className="text-[10px] text-slate-400 line-through tabular-nums">
                           {formatCurrency(item.originalPrice)}
                         </span>
                       )}
@@ -217,9 +236,10 @@ const MenuPage = () => {
 
                     <button
                       onClick={() => setSelectedProduct(item)}
-                      className="px-3.5 py-2 bg-red-50 hover:bg-[#ff3838] text-[#ff3838] hover:text-white font-extrabold text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1.5 shadow-sm"
+                      className="px-4 py-2 bg-red-50 hover:bg-[#ff3838] text-[#ff3838] hover:text-white font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1.5 shadow-sm hover:shadow-red-200"
                     >
-                      <i className="fas fa-plus text-[10px]"></i> Add
+                      <i className="fas fa-plus text-[10px]"></i>
+                      <span>Add</span>
                     </button>
                   </div>
                 </div>

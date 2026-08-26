@@ -49,19 +49,19 @@ const ShoppingCart = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center py-20 px-4 font-sans text-center">
-        <div className="w-24 h-24 bg-red-50 text-[#ff3838] rounded-full flex items-center justify-center mb-6 text-4xl shadow-inner">
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-center items-center py-20 px-4 font-sans text-center">
+        <div className="w-24 h-24 bg-white border border-slate-200/80 text-[#ff3838] rounded-3xl flex items-center justify-center mb-6 text-4xl shadow-[0_4px_25px_-5px_rgba(0,0,0,0.06)]">
           <i className="fas fa-shopping-basket"></i>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2 tracking-tight">
           Your Shopping Cart is Empty
         </h2>
-        <p className="text-gray-500 text-sm mb-8 max-w-md">
-          Looks like you haven't added any delicious food yet. Discover our menu and treat yourself!
+        <p className="text-slate-500 text-xs sm:text-sm mb-8 max-w-md font-medium">
+          Looks like you haven't added any dishes yet. Discover our chef special burgers, pizzas, and drinks!
         </p>
         <Link
           to="/menu"
-          className="px-8 py-3.5 bg-[#ff3838] text-white font-extrabold rounded-full hover:bg-[#e02d2d] transition shadow-lg shadow-red-200 text-sm active:scale-95"
+          className="px-8 py-3.5 bg-[#ff3838] hover:bg-[#e02d2d] text-white font-black rounded-2xl transition-all shadow-lg shadow-red-200 text-xs sm:text-sm active:scale-[0.98]"
         >
           Explore Menu
         </Link>
@@ -70,7 +70,7 @@ const ShoppingCart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] py-10 px-4 md:px-8 font-sans selection:bg-red-500 selection:text-white">
       {toast && (
         <Toast
           message={toast.message}
@@ -79,23 +79,28 @@ const ShoppingCart = () => {
         />
       )}
 
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Top Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
           <div>
-            <h1 className="text-3xl font-black text-[#0d1b2a]">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#ff3838] bg-red-50 border border-red-100 px-3 py-1 rounded-full">
+              Order Review
+            </span>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight mt-1.5">
               Your <span className="text-[#ff3838]">Shopping Cart</span>
             </h1>
-            <p className="text-gray-500 text-xs mt-1">
-              Review your items before proceeding to checkout ({items.length} items).
+            <p className="text-slate-500 text-xs mt-0.5 font-medium">
+              Review your items and apply vouchers before proceeding to delivery ({items.length} items).
             </p>
           </div>
 
           <button
             onClick={clearCart}
-            className="text-xs font-bold text-gray-400 hover:text-red-600 transition flex items-center gap-1.5"
+            className="text-xs font-bold text-slate-400 hover:text-red-600 transition flex items-center gap-1.5 py-2 px-3 rounded-xl hover:bg-red-50"
           >
-            <i className="fas fa-trash-alt"></i> Clear All Items
+            <i className="fas fa-trash-alt text-[10px]"></i>
+            <span>Clear Cart</span>
           </button>
         </div>
 
@@ -107,40 +112,40 @@ const ShoppingCart = () => {
             {items.map((item) => (
               <div
                 key={item.cartItemId || item.id}
-                className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:shadow-md transition"
+                className="bg-white rounded-3xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-slate-300 transition-all group"
               >
                 {/* Image & Info */}
                 <div className="flex items-center gap-4">
                   <img
                     src={item.imageUrl || item.img || "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400"}
                     alt={item.name}
-                    className="w-20 h-20 rounded-2xl object-cover shrink-0 bg-gray-100"
+                    className="w-20 h-20 rounded-2xl object-cover shrink-0 bg-slate-100 border border-slate-100"
                   />
-                  <div>
-                    <h3 className="font-extrabold text-base text-gray-900">
+                  <div className="space-y-1">
+                    <h3 className="font-black text-base text-slate-900 group-hover:text-[#ff3838] transition-colors leading-snug">
                       {item.name}
                     </h3>
-                    <div className="text-xs text-gray-500 space-x-2 mt-0.5">
-                      <span className="font-bold text-[#ff3838]">
+                    <div className="text-xs text-slate-500 flex items-center gap-2">
+                      <span className="font-black text-[#ff3838] tabular-nums">
                         {formatCurrency(item.price)}
                       </span>
                       {item.options?.size && item.options?.size !== "Standard" && (
-                        <span className="text-blue-600 font-semibold">
-                          • Size: {item.options.size}
+                        <span className="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                          Size: {item.options.size}
                         </span>
                       )}
                     </div>
 
                     {/* Toppings list */}
                     {item.options?.toppings && item.options.toppings.length > 0 && (
-                      <p className="text-[11px] text-gray-400 mt-1">
-                        + Toppings: {item.options.toppings.join(", ")}
+                      <p className="text-[11px] text-slate-400 font-medium">
+                        + {item.options.toppings.join(", ")}
                       </p>
                     )}
 
                     {/* Note */}
                     {item.options?.itemNote && (
-                      <p className="text-[11px] text-amber-600 italic mt-0.5">
+                      <p className="text-[11px] text-amber-600 font-medium italic">
                         Note: "{item.options.itemNote}"
                       </p>
                     )}
@@ -148,35 +153,35 @@ const ShoppingCart = () => {
                 </div>
 
                 {/* Quantity & Item Total & Delete */}
-                <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-0 border-gray-100">
-                  {/* Quantity modifier */}
-                  <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-1">
+                <div className="flex items-center justify-between sm:justify-end gap-5 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-0 border-slate-100">
+                  {/* Quantity modifier pill */}
+                  <div className="flex items-center bg-slate-50 border border-slate-200/80 rounded-2xl p-1 shadow-inner">
                     <button
                       onClick={() => updateQty(item.cartItemId, (item.qty || 1) - 1)}
-                      className="w-7 h-7 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-200 flex items-center justify-center text-xs transition"
+                      className="w-7 h-7 rounded-xl bg-white text-slate-700 font-black hover:bg-slate-100 flex items-center justify-center text-xs transition active:scale-95 shadow-sm"
                     >
                       -
                     </button>
-                    <span className="w-8 text-center font-bold text-xs text-gray-900">
+                    <span className="w-8 text-center font-black text-xs text-slate-900 tabular-nums">
                       {item.qty || 1}
                     </span>
                     <button
                       onClick={() => updateQty(item.cartItemId, (item.qty || 1) + 1)}
-                      className="w-7 h-7 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-200 flex items-center justify-center text-xs transition"
+                      className="w-7 h-7 rounded-xl bg-white text-slate-700 font-black hover:bg-slate-100 flex items-center justify-center text-xs transition active:scale-95 shadow-sm"
                     >
                       +
                     </button>
                   </div>
 
                   {/* Total price for this item */}
-                  <span className="font-black text-base text-gray-900 min-w-[80px] text-right">
+                  <span className="font-black text-base text-slate-900 min-w-[75px] text-right tabular-nums">
                     {formatCurrency((item.price || 0) * (item.qty || 1))}
                   </span>
 
                   {/* Delete button */}
                   <button
                     onClick={() => removeItem(item.cartItemId)}
-                    className="w-8 h-8 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition"
+                    className="w-8 h-8 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition"
                     title="Remove item"
                   >
                     <i className="fas fa-trash-alt text-xs"></i>
@@ -190,25 +195,25 @@ const ShoppingCart = () => {
           <div className="lg:col-span-4 space-y-6">
             
             {/* Promo / Voucher Box */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 space-y-4">
-              <h3 className="text-sm font-black uppercase tracking-wider text-gray-900 flex items-center gap-2">
+            <div className="bg-white rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 space-y-4">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
                 <i className="fas fa-ticket-alt text-[#ff3838]"></i>
                 <span>Promo Code & Coupons</span>
               </h3>
 
               {appliedVoucher ? (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between">
+                <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4 flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-black text-sm text-emerald-800">
+                      <span className="font-mono font-black text-sm text-emerald-900">
                         {appliedVoucher.code}
                       </span>
-                      <span className="text-[10px] bg-emerald-200 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] bg-emerald-200 text-emerald-800 font-black px-2 py-0.5 rounded-full">
                         Applied
                       </span>
                     </div>
-                    <p className="text-xs text-emerald-700 mt-1">
-                      Discount: -{formatCurrency(voucherDiscount)}
+                    <p className="text-xs text-emerald-700 mt-1 font-medium">
+                      Savings: -{formatCurrency(voucherDiscount)}
                     </p>
                   </div>
                   <button
@@ -224,76 +229,69 @@ const ShoppingCart = () => {
                     type="text"
                     value={voucherCodeInput}
                     onChange={(e) => setVoucherCodeInput(e.target.value.toUpperCase())}
-                    placeholder="Enter code (e.g., WELCOME50)"
-                    className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 text-xs font-mono uppercase text-gray-800 outline-none focus:bg-white focus:border-[#ff3838]"
+                    placeholder="e.g., WELCOME50"
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs font-mono uppercase text-slate-800 placeholder-slate-400 outline-none focus:bg-white focus:ring-4 focus:ring-red-100 focus:border-[#ff3838] transition font-bold"
                   />
                   <button
                     type="submit"
                     disabled={voucherLoading}
-                    className="px-5 py-2.5 bg-gray-900 hover:bg-black text-white font-bold rounded-2xl text-xs transition active:scale-95 disabled:opacity-50"
+                    className="px-5 py-2.5 bg-slate-900 hover:bg-[#ff3838] text-white font-bold rounded-2xl text-xs transition active:scale-95 disabled:opacity-50 shadow-sm"
                   >
                     {voucherLoading ? "..." : "Apply"}
                   </button>
                 </form>
               )}
 
-              {/* Suggestions */}
-              <div className="text-[11px] text-gray-400 space-y-1 pt-1">
-                <p className="font-semibold text-gray-500">Available Coupons:</p>
+              {/* Suggestions Chips */}
+              <div className="text-[11px] text-slate-400 space-y-1.5 pt-1">
+                <p className="font-bold text-slate-500 text-[10px] uppercase tracking-wider">
+                  Available Coupons (Click to paste):
+                </p>
                 <div className="flex flex-wrap gap-1.5">
-                  <span
-                    onClick={() => setVoucherCodeInput("WELCOME50")}
-                    className="cursor-pointer bg-red-50 hover:bg-red-100 text-[#ff3838] px-2 py-1 rounded-lg font-mono font-bold"
-                  >
-                    WELCOME50
-                  </span>
-                  <span
-                    onClick={() => setVoucherCodeInput("LOVEFOOD5")}
-                    className="cursor-pointer bg-red-50 hover:bg-red-100 text-[#ff3838] px-2 py-1 rounded-lg font-mono font-bold"
-                  >
-                    LOVEFOOD5
-                  </span>
-                  <span
-                    onClick={() => setVoucherCodeInput("FREESHIP")}
-                    className="cursor-pointer bg-red-50 hover:bg-red-100 text-[#ff3838] px-2 py-1 rounded-lg font-mono font-bold"
-                  >
-                    FREESHIP
-                  </span>
+                  {["WELCOME50", "LOVEFOOD5", "FREESHIP"].map((c) => (
+                    <span
+                      key={c}
+                      onClick={() => setVoucherCodeInput(c)}
+                      className="cursor-pointer bg-slate-100 hover:bg-red-50 hover:text-[#ff3838] text-slate-600 px-2.5 py-1 rounded-xl font-mono text-[11px] font-bold transition border border-slate-200/60"
+                    >
+                      {c}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Receipt Summary Box */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 space-y-4">
-              <h3 className="text-sm font-black uppercase tracking-wider text-gray-900 border-b pb-3">
+            <div className="bg-white rounded-3xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_10px_25px_-5px_rgba(0,0,0,0.02)] border border-slate-200/80 space-y-4">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
                 Order Summary
               </h3>
 
-              <div className="space-y-3 text-xs text-gray-600">
+              <div className="space-y-3 text-xs text-slate-600">
                 <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span className="font-bold text-gray-900">{formatCurrency(subtotal)}</span>
+                  <span className="font-medium">Subtotal</span>
+                  <span className="font-bold text-slate-900 tabular-nums">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Delivery Fee</span>
-                  <span className="font-bold text-gray-900">{formatCurrency(shippingFee)}</span>
+                  <span className="font-medium">Delivery Fee</span>
+                  <span className="font-bold text-slate-900 tabular-nums">{formatCurrency(shippingFee)}</span>
                 </div>
                 {voucherDiscount > 0 && (
                   <div className="flex justify-between text-emerald-600 font-bold">
                     <span>Discount Promo</span>
-                    <span>-{formatCurrency(voucherDiscount)}</span>
+                    <span className="tabular-nums">-{formatCurrency(voucherDiscount)}</span>
                   </div>
                 )}
-                <div className="border-t pt-3 flex justify-between items-baseline text-gray-900 font-black">
+                <div className="border-t border-slate-100 pt-3 flex justify-between items-baseline text-slate-900 font-black">
                   <span className="text-sm">Total Amount</span>
-                  <span className="text-2xl text-[#ff3838]">{formatCurrency(total)}</span>
+                  <span className="text-2xl text-[#ff3838] tabular-nums">{formatCurrency(total)}</span>
                 </div>
               </div>
 
               {/* Checkout Button */}
               <button
                 onClick={() => navigate("/checkout")}
-                className="w-full py-4 bg-gradient-to-r from-[#ff7b00] to-[#ff3838] hover:from-[#ff3838] hover:to-[#e02d2d] text-white font-black text-sm rounded-2xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 active:scale-95 mt-4"
+                className="w-full py-4 bg-gradient-to-r from-[#ff7b00] to-[#ff3838] hover:from-[#ff3838] hover:to-[#e02d2d] text-white font-black text-sm rounded-2xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 active:scale-[0.98] mt-4"
               >
                 <span>Proceed to Checkout</span>
                 <i className="fas fa-arrow-right text-xs"></i>
