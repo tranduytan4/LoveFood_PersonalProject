@@ -2,7 +2,7 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const { initDb, pool } = require("../config/db");
 
-const runSeed = async () => {
+const runSeed = async (closePoolOnEnd = false) => {
   console.log("🌱 Starting full database seed in English with encrypted passwords...");
   await initDb();
 
@@ -157,17 +157,24 @@ const runSeed = async () => {
 
     await client.query("COMMIT");
     console.log("🎉 English Commercial PostgreSQL Seed Completed Successfully!");
+    return { success: true };
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("❌ Seed error:", err);
     throw err;
   } finally {
     client.release();
-    await pool.end();
+    if (closePoolOnEnd) {
+      await pool.end();
+    }
   }
 };
 
-runSeed().catch((err) => {
-  console.error("❌ Fatal Seed error:", err.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  runSeed(true).catch((err) => {
+    console.error("❌ Fatal Seed error:", err.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { runSeed };
