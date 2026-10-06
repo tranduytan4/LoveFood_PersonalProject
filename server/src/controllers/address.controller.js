@@ -41,7 +41,12 @@ const createAddress = async (req, res, next) => {
 const setDefaultAddress = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const success = await Address.setDefault(parseInt(id, 10), req.user.id);
+    const addressId = parseInt(id, 10);
+    if (isNaN(addressId)) {
+      return res.status(400).json({ message: "Invalid address ID provided." });
+    }
+
+    const success = await Address.setDefault(addressId, req.user.id);
     if (!success) {
       return res.status(404).json({ message: "Address not found." });
     }
@@ -54,7 +59,12 @@ const setDefaultAddress = async (req, res, next) => {
 const deleteAddress = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const success = await Address.delete(parseInt(id, 10), req.user.id);
+    const addressId = parseInt(id, 10);
+    if (isNaN(addressId)) {
+      return res.status(400).json({ message: "Invalid address ID provided." });
+    }
+
+    const success = await Address.delete(addressId, req.user.id);
     if (!success) {
       return res.status(404).json({ message: "Address not found." });
     }

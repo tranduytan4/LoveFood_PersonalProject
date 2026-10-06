@@ -12,9 +12,10 @@ const getActiveVouchers = async (req, res, next) => {
 const applyVoucher = async (req, res, next) => {
   try {
     const { code, subtotal } = req.body;
+    const numSubtotal = Number(subtotal);
 
-    if (!code || typeof subtotal !== "number") {
-      return res.status(400).json({ message: "Please provide a coupon code and order subtotal." });
+    if (!code || isNaN(numSubtotal) || numSubtotal < 0) {
+      return res.status(400).json({ message: "Please provide a valid coupon code and order subtotal." });
     }
 
     const voucher = await Voucher.findByCode(code);
@@ -22,7 +23,7 @@ const applyVoucher = async (req, res, next) => {
       return res.status(404).json({ message: "Coupon code does not exist or has expired." });
     }
 
-    const result = Voucher.calculateDiscount(voucher, subtotal);
+    const result = Voucher.calculateDiscount(voucher, numSubtotal);
     if (!result.valid) {
       return res.status(400).json({ message: result.message });
     }

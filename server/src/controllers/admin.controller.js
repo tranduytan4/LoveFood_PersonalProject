@@ -28,6 +28,11 @@ const getAllOrders = async (req, res, next) => {
 const updateOrderStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const orderId = parseInt(id, 10);
+    if (isNaN(orderId)) {
+      return res.status(400).json({ message: "Invalid order ID provided." });
+    }
+
     const { status, note } = req.body;
 
     const allowedStatuses = ["pending", "confirmed", "preparing", "shipping", "completed", "cancelled"];
@@ -35,7 +40,7 @@ const updateOrderStatus = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid order status provided." });
     }
 
-    const updated = await Order.updateStatus(parseInt(id, 10), status, note, req.user.id);
+    const updated = await Order.updateStatus(orderId, status, note, req.user.id);
     if (!updated) {
       return res.status(404).json({ message: "Order not found." });
     }
@@ -52,7 +57,12 @@ const updateOrderStatus = async (req, res, next) => {
 const toggleProductStock = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const updated = await Product.toggleAvailability(parseInt(id, 10));
+    const productId = parseInt(id, 10);
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: "Invalid product ID provided." });
+    }
+
+    const updated = await Product.toggleAvailability(productId);
     if (!updated) {
       return res.status(404).json({ message: "Dish not found." });
     }

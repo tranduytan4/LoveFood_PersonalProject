@@ -23,11 +23,12 @@ const register = async (req, res, next) => {
     const passwordHash = await bcrypt.hash(password, salt);
 
     const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ff3838&color=fff`;
+    const sanitizedPhone = phone && phone.trim() ? phone.trim() : null;
 
     const newUser = await User.create({
-      name,
-      email,
-      phone: phone || null,
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      phone: sanitizedPhone,
       passwordHash,
       avatarUrl,
       roleName: "customer",
@@ -100,7 +101,14 @@ const getProfile = async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   try {
     const { name, phone, avatarUrl } = req.body;
-    const updated = await User.updateProfile(req.user.id, { name, phone, avatarUrl });
+    const sanitizedName = name && name.trim() ? name.trim() : undefined;
+    const sanitizedPhone = phone !== undefined ? (phone && phone.trim() ? phone.trim() : null) : undefined;
+
+    const updated = await User.updateProfile(req.user.id, {
+      name: sanitizedName,
+      phone: sanitizedPhone,
+      avatarUrl,
+    });
     res.json({
       message: "Profile updated successfully!",
       data: updated,
