@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const env = {
   port: process.env.PORT || 5000,
+  databaseUrl: process.env.DATABASE_URL || "",
   pgHost: process.env.PGHOST || "localhost",
   pgPort: parseInt(process.env.PGPORT, 10) || 5432,
   pgUser: process.env.PGUSER || "postgres",

@@ -1,13 +1,22 @@
 const { Pool } = require("pg");
 const { env } = require("./env");
 
-const pool = new Pool({
-  host: env.pgHost,
-  port: env.pgPort,
-  user: env.pgUser,
-  password: env.pgPassword,
-  database: env.pgDatabase,
-});
+const poolConfig = env.databaseUrl
+  ? {
+      connectionString: env.databaseUrl,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    }
+  : {
+      host: env.pgHost,
+      port: env.pgPort,
+      user: env.pgUser,
+      password: env.pgPassword,
+      database: env.pgDatabase,
+    };
+
+const pool = new Pool(poolConfig);
 
 const initDb = async () => {
   try {
