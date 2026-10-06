@@ -25,10 +25,10 @@ const Product = {
     }
 
     let orderBy = "p.created_at DESC";
-    if (sort === "priceAsc") orderBy = "p.price ASC";
-    else if (sort === "priceDesc") orderBy = "p.price DESC";
-    else if (sort === "bestSeller") orderBy = "p.sold_count DESC";
-    else if (sort === "topRated") orderBy = "p.rating_avg DESC";
+    if (sort === "priceAsc" || sort === "price_asc") orderBy = "p.price ASC";
+    else if (sort === "priceDesc" || sort === "price_desc") orderBy = "p.price DESC";
+    else if (sort === "bestSeller" || sort === "popular") orderBy = "p.sold_count DESC";
+    else if (sort === "topRated" || sort === "rating") orderBy = "p.rating_avg DESC";
 
     const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 

@@ -31,17 +31,25 @@ const LoginPage = () => {
 
     try {
       if (isRegister) {
-        await register(formData);
+        const res = await register(formData);
+        if (!res.success) {
+          setErrorMsg(res.message || "Failed to create account. Please try again.");
+          return;
+        }
         setToast({ type: "success", message: "Account created successfully! Welcome to LoveFood!" });
       } else {
-        await login({ email: formData.email, password: formData.password });
+        const res = await login({ email: formData.email, password: formData.password });
+        if (!res.success) {
+          setErrorMsg(res.message || "Invalid email or password. Please try again.");
+          return;
+        }
         setToast({ type: "success", message: "Welcome back! Signed in successfully." });
       }
       setTimeout(() => navigate("/"), 600);
     } catch (err) {
       setErrorMsg(
         err.response?.data?.message ||
-          "Sign in failed. Please verify your email and password."
+          "An unexpected error occurred. Please try again."
       );
     } finally {
       setSubmitting(false);

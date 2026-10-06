@@ -37,7 +37,9 @@ const Logo = ({
   const currentSize = sizeConfig[size] || sizeConfig.md;
 
   const content = (
-    <div className={`inline-flex items-center gap-3 group select-none ${className}`}>
+    <div
+      className={`inline-flex items-center gap-3 group select-none ${className}`}
+    >
       {/* 🍔 3D Radiant Brand Badge with Burger Icon */}
       <div
         className={`${currentSize.box} rounded-2xl bg-gradient-to-tr from-[#e62e2e] via-[#ff3838] to-[#ff7b00] flex items-center justify-center shadow-lg shadow-red-300/60 ring-2 ring-white group-hover:scale-105 group-hover:shadow-red-400/80 transition-all duration-300 shrink-0 relative overflow-hidden`}

@@ -40,11 +40,23 @@ const FoodCustomizationModal = ({ product, isOpen, onClose, onAddToCart }) => {
   };
 
   const handleAdd = () => {
+    // Map selected toppings to complete objects with name and priceAdjustment
+    const fullSelectedToppings = selectedToppings.map((toppingName) => {
+      const found = product.toppings?.find((t) => t.name === toppingName);
+      return {
+        name: toppingName,
+        priceAdjustment: found ? Number(found.priceAdjustment) : 0,
+      };
+    });
+
     onAddToCart(product, {
       size: selectedSize,
-      toppings: selectedToppings,
+      sizePrice,
+      toppings: fullSelectedToppings,
+      note: itemNote.trim(),
       itemNote: itemNote.trim(),
       unitPrice,
+      qty: quantity,
       quantity,
     });
     onClose();

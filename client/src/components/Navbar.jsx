@@ -44,7 +44,10 @@ const Navbar = () => {
 
         {/* Center: Search Bar */}
         <div className="hidden md:flex flex-1 max-w-xl mx-6 relative">
-          <form onSubmit={handleSearchSubmit} className="w-full relative flex items-center">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="w-full relative flex items-center"
+          >
             <button
               type="submit"
               className="absolute left-4 text-gray-400 text-base hover:text-[#ff3838] transition-colors focus:outline-none"
@@ -125,7 +128,9 @@ const Navbar = () => {
                     <p className="text-xs font-bold text-gray-900 truncate">
                       {user?.name}
                     </p>
-                    <p className="text-[11px] text-gray-400 truncate">{user?.email}</p>
+                    <p className="text-[11px] text-gray-400 truncate">
+                      {user?.email}
+                    </p>
                     {user?.role === "admin" && (
                       <span className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wider bg-red-100 text-[#ff3838] px-2 py-0.5 rounded">
                         System Admin
@@ -193,7 +198,10 @@ const Navbar = () => {
       {open && (
         <div className="lg:hidden bg-white border-b border-gray-200 shadow-xl p-5 flex flex-col gap-4">
           {/* Mobile Search */}
-          <form onSubmit={handleSearchSubmit} className="relative flex items-center mb-2">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="relative flex items-center mb-2"
+          >
             <input
               type="text"
               value={searchTerm}
@@ -237,7 +245,9 @@ const Navbar = () => {
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-bold text-xs text-gray-900">{user?.name}</p>
+                  <p className="font-bold text-xs text-gray-900">
+                    {user?.name}
+                  </p>
                   <p className="text-[11px] text-gray-500">{user?.email}</p>
                 </div>
               </div>

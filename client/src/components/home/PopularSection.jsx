@@ -45,7 +45,8 @@ const PopularSection = () => {
   }, [page, popularItems]);
 
   const nextPage = () => setPage((prev) => (prev + 1) % totalPages);
-  const prevPage = () => setPage((prev) => (prev - 1 + totalPages) % totalPages);
+  const prevPage = () =>
+    setPage((prev) => (prev - 1 + totalPages) % totalPages);
 
   const handleAddToCart = (product, options) => {
     addItem(product, options);
@@ -87,7 +88,10 @@ const PopularSection = () => {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-gray-50 rounded-2xl p-5 animate-pulse space-y-4">
+              <div
+                key={i}
+                className="bg-gray-50 rounded-2xl p-5 animate-pulse space-y-4"
+              >
                 <div className="w-full h-52 bg-gray-200 rounded-2xl"></div>
                 <div className="h-5 bg-gray-200 rounded w-2/3"></div>
                 <div className="h-4 bg-gray-200 rounded w-full"></div>

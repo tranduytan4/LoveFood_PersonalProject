@@ -8,7 +8,7 @@ const Order = {
     recipientPhone,
     shippingAddress,
     subtotal,
-    shippingFee = 15000,
+    shippingFee = 2.50,
     discountAmount = 0,
     totalAmount,
     voucherId = null,
@@ -60,6 +60,17 @@ const Order = {
 
       // 2. Insert Order Items & increment product sold count
       for (const item of items) {
+        const itemQty = Number(item.quantity || item.qty || 1);
+        const itemUnitPrice = Number(item.price || item.product_price || 0);
+        const itemTotal = itemUnitPrice * itemQty;
+
+        const optionsData = item.options || {
+          toppings: item.toppings || [],
+          size: item.size || "Standard",
+          itemNote: item.note || item.itemNote || "",
+        };
+        const optionsJson = typeof optionsData === "string" ? optionsData : JSON.stringify(optionsData);
+
         const insertItemQuery = `
           INSERT INTO order_items (
             order_id, product_id, product_name, product_price,
@@ -67,19 +78,13 @@ const Order = {
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7)
         `;
-        const itemTotal = (item.price || 0) * (item.quantity || 1);
-        const optionsJson = JSON.stringify({
-          toppings: item.toppings || [],
-          size: item.size || "Standard",
-          itemNote: item.note || "",
-        });
 
         await client.query(insertItemQuery, [
           orderId,
           item.productId || null,
-          item.name || item.productName,
-          item.price,
-          item.quantity,
+          item.name || item.productName || "Delicious Dish",
+          itemUnitPrice,
+          itemQty,
           itemTotal,
           optionsJson,
         ]);
@@ -87,7 +92,7 @@ const Order = {
         if (item.productId) {
           await client.query(
             `UPDATE products SET sold_count = sold_count + $1 WHERE id = $2`,
-            [item.quantity, item.productId]
+            [itemQty, item.productId]
           );
         }
       }

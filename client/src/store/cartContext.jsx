@@ -72,24 +72,50 @@ export const CartProvider = ({ children }) => {
       sizePrice = 0,
       toppings = [],
       note = "",
+      itemNote = "",
       qty = 1,
+      quantity = 1,
     } = options;
 
-    const toppingsPrice = toppings.reduce((acc, t) => acc + (t.priceAdjustment || 0), 0);
-    const unitPrice = (product.price || 0) + sizePrice + toppingsPrice;
+    const finalQty = Number(options.quantity || options.qty || qty || quantity || 1);
+    const finalNote = note || itemNote || "";
+
+    // Normalize toppings to always be an array of objects
+    const normalizedToppings = toppings.map((t) => {
+      if (typeof t === "string") {
+        const found = product.toppings?.find((pt) => pt.name === t);
+        return {
+          name: t,
+          priceAdjustment: found ? Number(found.priceAdjustment) : 0,
+        };
+      }
+      return {
+        name: t.name || "",
+        priceAdjustment: Number(t.priceAdjustment || 0),
+      };
+    });
+
+    const calculatedSizePrice = Number(
+      sizePrice || (size === "Large" ? 1.50 : 0)
+    );
+    const toppingsPrice = normalizedToppings.reduce(
+      (acc, t) => acc + (t.priceAdjustment || 0),
+      0
+    );
+    const unitPrice = (Number(product.price) || 0) + calculatedSizePrice + toppingsPrice;
 
     // Create a deterministic unique cart key based on product + size + sorted toppings
-    const toppingKey = toppings
+    const toppingKey = normalizedToppings
       .map((t) => t.name)
       .sort()
       .join("-");
-    const cartItemId = `${product.id || product.slug}-${size}-${toppingKey}-${note.trim()}`;
+    const cartItemId = `${product.id || product.slug}-${size}-${toppingKey}-${finalNote.trim()}`;
 
     setItems((prevItems) => {
       const existingIndex = prevItems.findIndex((item) => item.cartItemId === cartItemId);
       if (existingIndex > -1) {
         const next = [...prevItems];
-        next[existingIndex].qty += qty;
+        next[existingIndex].qty += finalQty;
         return next;
       }
 
@@ -100,12 +126,13 @@ export const CartProvider = ({ children }) => {
         name: product.name,
         category: product.category?.name || product.category || "Món ngon",
         imageUrl: product.imageUrl || product.img || "",
-        basePrice: product.price || 0,
+        basePrice: Number(product.price) || 0,
         price: unitPrice,
         size,
-        toppings,
-        note,
-        qty,
+        sizePrice: calculatedSizePrice,
+        toppings: normalizedToppings,
+        note: finalNote,
+        qty: finalQty,
       };
       return [...prevItems, newItem];
     });
@@ -135,7 +162,7 @@ export const CartProvider = ({ children }) => {
 
   const applyVoucher = async (code) => {
     if (!code || !code.trim()) {
-      return { success: false, message: "Vui lòng nhập mã giảm giá" };
+      return { success: false, message: "Please enter a coupon code." };
     }
     try {
       const res = await voucherApi.apply(code.trim(), subtotal);
@@ -149,12 +176,12 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem("smart_food_voucher", JSON.stringify(vData));
         return {
           success: true,
-          message: `Áp dụng mã ${res.data.data.code} thành công! Giảm ${res.data.data.discountAmount.toLocaleString("vi-VN")} ₫`,
+          message: `Coupon ${res.data.data.code} applied! Saved $${res.data.data.discountAmount.toFixed(2)}`,
         };
       }
-      return { success: false, message: res.data?.message || "Mã không hợp lệ" };
+      return { success: false, message: res.data?.message || "Invalid coupon code" };
     } catch (err) {
-      const message = err.response?.data?.message || "Mã giảm giá không hợp lệ hoặc không đủ điều kiện";
+      const message = err.response?.data?.message || "Coupon code is invalid or does not meet minimum order requirements";
       return { success: false, message };
     }
   };
@@ -195,6 +222,7 @@ export const CartProvider = ({ children }) => {
         subtotal,
         shippingFee,
         discountAmount: voucherDiscount,
+        voucherDiscount,
         total,
         appliedVoucher,
         addItem,
